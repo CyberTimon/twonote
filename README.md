@@ -29,3 +29,6 @@ Open your web browser and go to http://localhost:21126 to access the TwoNote app
 - **Note Creation & Management:** Easily create new notes, edit existing ones, and organize your thoughts seamlessly.
 - **Simple Text Formatting:** Use basic text formatting options like headings, bold text, and lists to structure your notes.
 - **Password Protection:** Secure your notes with a password verification system to keep your information private.
+
+## Screenshot of TwoNote
+![plot](TwoNote-Screenshot.png)
