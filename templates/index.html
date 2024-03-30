@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>TwoNote</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous"></script>
+</head>
+<style>
+
+::-moz-selection { /* Code for Firefox */
+  color: white;
+  background: #c35250;
+}
+
+::selection {
+  color: white;
+  background: #c35250;
+}
+    
+body {
+    background-color: #171717;
+    color: white;
+    font-family: Poppins;
+    display: flex;
+    justify-content: center;
+}
+
+.site {
+    width: 80%;
+}
+
+.header {
+    padding: 10px;
+    background-color: #2d2d2d;
+    border-radius: 10px;
+    padding: 20px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header h1 {
+    margin: 0px;
+}
+
+a {
+    color: #c35250;
+}
+    
+img {
+    width: 50%;
+}
+
+td img {
+    width: 100%;
+}
+
+button {
+    background-color: #c35250;
+    border-radius: 6px;
+    color: white;
+    font-family: Poppins;
+    border-style: hidden;
+    cursor: pointer;
+}
+
+.editor table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-top: 10px;
+}
+
+.editor td, .editor th {
+    border: 1px solid #ddd;
+    text-align: left;
+    padding: 8px;
+}
+
+.editor tr:nth-child(even) {
+    background-color: #3b3b3b;
+}
+
+#editor-content {
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+}
+
+.container.locked {
+    filter: blur(5px);
+    pointer-events: none;
+}
+    
+.container {
+    display: flex;
+}
+
+.sidebar {
+    width: 300px;
+    background-color: #2d2d2d;
+    border-radius: 10px;
+    padding: 20px;
+    margin: 20px;
+    margin-left: 0px;
+}
+
+.main-content {
+    flex: 1;
+    padding: 10px;
+    background-color: #2d2d2d;
+    border-radius: 10px;
+    padding: 20px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.editor {
+    height: auto;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    padding: 10px;
+}
+
+.sidebar ul li {
+    cursor: pointer;
+    margin-bottom: 5px;
+}
+
+.image-gallery {
+    margin-top: 20px;
+}
+
+#image-container {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+#image-container img {
+    max-width: 200px;
+    max-height: 200px;
+    margin: 5px;
+}
+
+[contenteditable]:focus {
+    outline-style: dotted;
+    outline-width: thick;
+    outline-color: #3b3b3b;
+    border-radius: 10px;
+}
+    
+#site-name {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.list-flexbox {
+    display: flex;
+    justify-content: space-between;
+}
+
+[contentEditable=true]:empty:not(:focus):before {
+    content: attr(placeholder-text);
+    opacity: 50%;
+}
+</style>
+<body>
+    <div class="site">
+        <div class="header">
+            <div style="display:flex;">
+                <h1 style="margin-right: 10px;">TwoNote </h1>
+                <h1 id="time" style="opacity: 50%;"></h1>
+            </div>
+            <button id="login-btn" style="height: 35px;"><b>Login</b></button>
+        </div>
+        <div class="container">
+            <div class="sidebar">
+                <h1 style="margin-top: 0px;display: flex; align-items: center; justify-content: space-between;"><i class="fa-solid fa-bars"></i> Seiten
+                <button id="new-page-btn" style="height: 35px;"><b><i class="fa-solid fa-plus"></i>
+                Seite</button></b></h1>
+                <ul id="page-list" style="padding-left: 20px;"></ul>
+            </div>
+            <div class="main-content">
+                <h1 style="margin-top: 0px;display: flex; align-items: center; justify-content: space-between;"><i class="fa-regular fa-file-lines"></i>
+                    <div id="site-name" placeholder-text="Seitenname eingeben..." spellcheck="false" contenteditable="true"></div>
+                    <button id="save-page-btn" style="height: 35px;"><b><i class="fa-solid fa-floppy-disk"></i>
+                    Speichern</b></button></h1>
+                <div class="editor" style="border: none;">
+                    <div id="editor-content" autofocus spellcheck="false" placeholder-text="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum." contenteditable="true"></div>
+                </div>
+                <h2><i class="fa-solid fa-paragraph"></i> Schnellzugriff</h2>
+                <div class="editor-buttons">
+                    <button type="button" id="add-h1">+ Titel</button>
+                    <button type="button" id="add-h2">+ Untertitel</button>
+                    <button type="button" id="add-table">+ Tabelle</button>
+                    <button type="button" id="add-link">+ Link</button>
+                </div><br>
+                <i class="fa-solid fa-keyboard"></i> Shift + Auswahl = Fett
+            </div>
+        </div>
+    </div>
+    
+    <script>
+const editorContent = document.getElementById('editor-content');
+        
+document.addEventListener('DOMContentLoaded', function() {
+    updateUnlockButtonState();
+    
+    loadPages();
+
+    document.getElementById('new-page-btn').addEventListener('click', newPage);
+
+    document.getElementById('save-page-btn').addEventListener('click', savePage);
+
+    document.getElementById('add-h1').addEventListener('click', function() {
+        insertElementAtCursor('h1', 'Titel');
+    });
+    document.getElementById('add-h2').addEventListener('click', function() {
+        insertElementAtCursor('h2', 'Untertitel');
+    });
+    document.getElementById('add-table').addEventListener('click', insertTableAtCursor);
+
+    document.getElementById('add-link').addEventListener('click', function() {
+        const linkUrl = prompt('Enter the link URL:');
+        const linkText = prompt('Enter the link text (optional):');
+        if (linkUrl) {
+            insertLinkAtCursor(linkUrl, linkText);
+        }
+    });
+});
+
+function updateUnlockButtonState() {
+    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+    const unlockBtn = document.getElementById('login-btn');
+    const container = document.querySelector('.container');
+
+    if (isLoggedIn) {
+        unlockBtn.innerHTML = '<b><i class="fa-solid fa-right-from-bracket"></i> Ausloggen</b>';
+        container.style.filter = 'none';
+        container.style.pointerEvents = 'auto';
+    } else {
+        unlockBtn.innerHTML = '<b><i class="fa-solid fa-right-to-bracket"></i> Einloggen</b>';
+        container.style.filter = 'blur(5px)';
+        container.style.pointerEvents = 'none';
+    }
+
+    unlockBtn.removeEventListener('click', handleUnlock);
+    unlockBtn.removeEventListener('click', handleLogout);
+
+    if (isLoggedIn) {
+        unlockBtn.addEventListener('click', handleLogout);
+    } else {
+        unlockBtn.addEventListener('click', handleUnlock);
+    }
+}
+
+document.getElementById('editor-content').addEventListener('mousedown', function(event) {
+    if (event.shiftKey) {
+        event.preventDefault();
+        setTimeout(() => {
+            const selection = window.getSelection();
+            if (selection.rangeCount > 0 && !selection.isCollapsed) {
+                document.execCommand('bold', false, null);
+            }
+        }, 0);
+    }
+});
+
+function insertElementAtCursor(tagName, defaultText) {
+    const editorContent = document.getElementById('editor-content');
+    editorContent.focus();
+    
+    const newElement = document.createElement(tagName);
+    newElement.textContent = defaultText;
+    insertAtCursor(newElement);
+}
+
+function insertTableAtCursor() {
+    const editorContent = document.getElementById('editor-content');
+    editorContent.focus();
+
+    const rows = prompt('Enter the number of rows (e.g., 2):');
+    const cols = prompt('Enter the number of columns (e.g., 3):');
+
+    if (rows && cols) {
+        const table = document.createElement('table');
+        table.style.width = '100%';
+        table.setAttribute('border', '1');
+        const tbody = document.createElement('tbody');
+
+        for (let i = 0; i < rows; i++) {
+            const tr = document.createElement('tr');
+            for (let j = 0; j < cols; j++) {
+                const td = document.createElement('td');
+                td.textContent = ``;
+                tr.appendChild(td);
+            }
+            tbody.appendChild(tr);
+        }
+
+        table.appendChild(tbody);
+        insertAtCursor(table);
+    }
+}
+
+editorContent.addEventListener('click', function(event) {
+    const target = event.target;
+    if (target.tagName.toLowerCase() === 'a') {
+        event.preventDefault(); // Prevent the default link behavior
+        const url = target.href;
+        window.open(url, '_blank'); // Open the link in a new tab
+    }
+});
+
+function insertLinkAtCursor(url, text) {
+    const editorContent = document.getElementById('editor-content');
+    editorContent.focus();
+
+    const link = document.createElement('a');
+    link.href = url;
+    link.textContent = text || url;
+    insertAtCursor(link);
+}
+        
+function insertAtCursor(element) {
+    const editorContent = document.getElementById('editor-content');
+    editorContent.focus();
+    
+    const sel = window.getSelection();
+    if (sel.rangeCount) {
+        const range = sel.getRangeAt(0);
+        const currentNode = range.commonAncestorContainer;
+
+        if (currentNode === editorContent || currentNode.parentNode === editorContent) {
+            const br = document.createElement('div');
+            range.insertNode(br);
+
+            range.setStartAfter(br);
+            range.setEndAfter(br);
+            range.insertNode(element);
+            range.setStartAfter(element);
+            range.setEndAfter(element);
+            
+            sel.removeAllRanges(); 
+            sel.addRange(range); 
+        } else {
+            editorContent.appendChild(element);
+        }
+    }
+}
+
+function deletePage(pageName) {
+    if (!confirm(`Bist du sicher, dass du "${pageName}" löschen willst?`)) {
+        return; // Stop if the user cancels
+    }
+    
+    const currentPageName = document.getElementById('site-name').getAttribute('data-original-name') + '.txt';
+    const isCurrentPage = currentPageName === pageName;
+
+    fetch(`/pages/${pageName}`, {
+        method: 'DELETE',
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log(data.message);
+        loadPages(); // Reload the page list
+        // Check if the deleted page is the current page
+        if (isCurrentPage) {
+            document.getElementById('editor-content').innerHTML = ''; // Clear the editor content
+            document.getElementById('site-name').textContent = ''; // Clear the site name
+            document.getElementById('site-name').removeAttribute('data-original-name'); // Also clear the original name attribute
+        }
+    })
+    .catch(error => console.error('Error deleting page:', error));
+}
+
+function newPage() {
+    document.getElementById('editor-content').innerHTML = ''; // Clear the editor content
+    const siteName = document.getElementById('site-name');
+    siteName.textContent = ''; // Clear the site name
+    siteName.removeAttribute('data-original-name'); // Remove the attribute if it's meant to reflect the current page state
+}
+
+function loadPages() {
+    fetch('/pages')
+        .then(response => response.json())
+        .then(pages => {
+            const pageList = document.getElementById('page-list');
+            pageList.innerHTML = '';
+
+            // Sort the pages alphabetically
+            pages.sort((a, b) => a.localeCompare(b));
+
+            pages.forEach(page => {
+                const li = document.createElement('li');
+                const text = document.createTextNode(page.replace(".txt", ""));
+                const flexbox = document.createElement('div');
+                const deleteBtn = document.createElement('button');
+
+                flexbox.className = 'list-flexbox';
+                
+                deleteBtn.innerHTML = '<i class="fa-solid fa-trash-can"></i>';
+                deleteBtn.style.marginLeft = '10px';
+                deleteBtn.onclick = function() { deletePage(page); };
+                
+                flexbox.appendChild(text);
+                flexbox.appendChild(deleteBtn);
+                li.appendChild(flexbox);
+                li.setAttribute('data-page', page);
+                li.addEventListener('click', function(event) {
+                    // Prevent triggering when clicking on the delete button
+                    if (event.target === deleteBtn) return;
+                    loadPage(page);
+                });
+                pageList.appendChild(li);
+            });
+        });
+}
+
+function loadPage(pageName) {
+    fetch(`/pages/${pageName}`)
+        .then(response => response.json())
+        .then(content => {
+            document.getElementById('editor-content').innerHTML = content;
+            document.getElementById('site-name').innerHTML = pageName.replace(".txt", "");
+            
+            const activePage = document.querySelector('#page-list li.active');
+            if (activePage) {
+                activePage.classList.remove('active');
+            }
+
+            const selectedPage = document.querySelector(`#page-list li[data-page="${pageName}"]`);
+            if (selectedPage) {
+                selectedPage.classList.add('active');
+            }
+
+            document.getElementById('site-name').setAttribute('data-original-name', pageName.replace(".txt", ""));
+        });
+}
+
+document.getElementById('site-name').addEventListener('blur', function(event) {
+    const oldName = this.getAttribute('data-original-name'); // Retrieve the original name
+    const newName = this.textContent.trim();
+
+    if (!newName) { // Check if the new name is empty
+        alert('Der Seitenname darf nicht leer sein. Bitte geben Sie einen gültigen Namen ein.');
+        this.textContent = oldName; // Revert to the old name
+        return; // Stop the renaming process
+    }
+
+    if (oldName !== newName) { // Proceed if the name has actually changed and is not empty
+        fetch('/pages/rename', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ old_name: oldName, new_name: newName })
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data.message);
+            this.setAttribute('data-original-name', newName); // Update the original name to the new name
+            loadPages(); // Reload the pages list to reflect the name change
+        })
+        .catch(error => console.error('Error renaming page:', error));
+    }
+});
+
+
+function savePage() {
+    const pageName = document.getElementById('site-name').textContent.trim();
+    
+    if (!pageName) {
+        alert('Bitte geben Sie einen Seitennamen ein.');
+        return;
+    }
+    
+    const content = document.getElementById('editor-content').innerHTML;
+    
+    fetch('/pages', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ name: pageName, content: content })
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log(data.message);
+        loadPages(); // Reload the page list after saving
+    }).catch(error => console.error('Error saving page:', error));
+}
+
+function updateTime() {
+    var now = new Date();
+    var hours = now.getHours();
+    var minutes = now.getMinutes();
+
+    hours = (hours < 10 ? "0" : "") + hours;
+    minutes = (minutes < 10 ? "0" : "") + minutes;
+
+    document.getElementById("time").textContent = hours + ":" + minutes;
+}
+updateTime();
+setInterval(updateTime, 1000);
+
+function handleUnlock() {
+    const password = prompt('Passwort eingeben:');
+    if (password) {
+        fetch('/verify-password', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ password: password })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.valid) {
+                localStorage.setItem('isLoggedIn', 'true');
+                updateUnlockButtonState();
+            } else {
+                alert('Falsches Passwort!');
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    }
+}
+
+function handleLogout() {
+    localStorage.removeItem('isLoggedIn');
+    updateUnlockButtonState();
+}
+
+    </script>
+</body>
+</html>
